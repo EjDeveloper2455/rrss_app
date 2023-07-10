@@ -11,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -57,7 +60,7 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
         binding.spnVerEstados.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setItems();
+                setItems(binding.spnVerEstados.getSelectedItemPosition());
             }
 
             @Override
@@ -74,8 +77,9 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         Empleado empleado = (Empleado) data.getSerializableExtra("empleado");
-                        empleadoViewModel.insert(empleado);
-                        setItems();
+                        if(data.getStringExtra("action").equals("new"))empleadoViewModel.insert(empleado);
+                        else empleadoViewModel.update(empleado);
+                        setItems(binding.spnVerEstados.getSelectedItemPosition());
                     } else {
                         Toast.makeText(this.getContext(),"Operación cancelada",Toast.LENGTH_LONG).show();
                     }
@@ -102,8 +106,8 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
         binding = null;
     }
 
-    public void setItems(){
-        int pos = binding.spnVerEstados.getSelectedItemPosition();
+    public void setItems(int pos){
+
         if (pos == 0) {
             empleadoViewModel.getDataset().observe(getViewLifecycleOwner(), empleados -> {
                 empleadoAdapter.setItems(empleados);
@@ -120,43 +124,90 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
     }
 
     @Override
-    public void onItemClick(Empleado data,String click) {
-        if (click.equals("delete")){
-            modalDelete(data);
-        }else {
-            modalCard(data);
-        }
+    public void onItemClick(Empleado data) {
+        modalEmpleado(data);
     }
 
-    public void modalDelete(Empleado empleado){
-        String accion = "DESHABILITAR";
-        if(empleado.getEstado().equals("Inactivo"))accion = "HABILITAR";
+    private void modalEmpleado(Empleado empleado){
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-        builder.setTitle(empleado.getNombre()+"\n"+empleado.getDni());
-        builder.setMessage("Si desea "+accion.toLowerCase()+" este empleado haz click en \""+accion+"\"/nSi desea eliminarlo completamente has click en \"ELIMINAR\"");
-        builder.setPositiveButton(accion, (dialog, which) -> {
-            if(empleado.getEstado().equals("Inactivo")){
+
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View view = layoutInflater.inflate(R.layout.modal_empleado,null);
+        builder.setView(view);
+
+        AlertDialog dialog = builder.create();
+
+
+        TextView tvCampos[] =  {view.findViewById(R.id.tvModalDNI),view.findViewById(R.id.tvModalNombre),
+                view.findViewById(R.id.tvModalNombre1),view.findViewById(R.id.tvModalDepartamento),
+                view.findViewById(R.id.tvModalCargo),view.findViewById(R.id.tvModalSexo),
+                view.findViewById(R.id.tvModalSalario),view.findViewById(R.id.tvModalEstado)};
+        tvCampos[0].setText(getString(R.string.lbl_modal_dni,empleado.getDni()));
+        tvCampos[1].setText(R.string.lbl_nodal_nombre_completo);
+        tvCampos[2].setText(empleado.getNombre());
+        tvCampos[3].setText(getString(R.string.lbl_modal_departamento,empleado.getDepartamento()+""));
+        tvCampos[4].setText(getString(R.string.lbl_modal_cargo,empleado.getCargo()+""));
+        tvCampos[5].setText(getString(R.string.lbl_modal_sexo,empleado.getSexo()));
+        tvCampos[6].setText(getString(R.string.lbl_modal_salario,empleado.getSalario()+""));
+        tvCampos[7].setText(getString(R.string.lbl_modal_estado,empleado.getEstado()));
+
+        Button btnCerrar = view.findViewById(R.id.btnCerrar);
+        btnCerrar.setOnClickListener(v ->{
+            dialog.cancel();
+        });
+
+        ImageView iconoEmpleado = view.findViewById(R.id.imgEmpleadoModal);
+
+        if(empleado.getSexo().equals("Femenino")){
+            iconoEmpleado.setImageResource(R.drawable.empleada);
+        }else{
+            iconoEmpleado.setImageResource(R.drawable.empleado);
+        }
+
+        ImageView imgEliminar = view.findViewById(R.id.imgEliminar);
+        imgEliminar.setOnClickListener(v ->{
+            dialog.cancel();
+            modalConfimarEliminar(empleado);
+        });
+
+        ImageView imgActivar = view.findViewById(R.id.imgHabilitar);
+        imgActivar.setOnClickListener(v ->{
+            dialog.cancel();
+
+            if(empleado.getEstado().equalsIgnoreCase("Inactivo")){
                 empleado.setEstado("Activo");
             }else{
                 empleado.setEstado("Inactivo");
             }
             empleadoViewModel.update(empleado);
-            setItems();
+            setItems(binding.spnVerEstados.getSelectedItemPosition());
+        });
 
+        if(empleado.getEstado().equals("Inactivo")){
+            imgActivar.setImageResource(R.drawable.habilitar);
+        }else{
+            imgActivar.setImageResource(R.drawable.deshabilitar);
+        }
+
+        ImageView imgModificar = view.findViewById(R.id.imgModificar);
+        imgModificar.setOnClickListener(v ->{
+            Intent intent = new Intent(requireContext(), NewEmpleadoActivity.class);
+            intent.putExtra("action","update");
+            intent.putExtra("empleado",empleado);
+            launcher.launch(intent);
+            dialog.cancel();
         });
-        builder.setNegativeButton("ELIMINAR", (dialog, which) -> {
-            modalConfimarEliminar(empleado);
-        });
-        AlertDialog dialog = builder.create();
+
         dialog.show();
     }
+
     public void modalConfimarEliminar(Empleado empleado){
         AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
         builder.setTitle(empleado.getNombre()+"\n"+empleado.getDni());
         builder.setMessage("¿Está seguro que desea eliminar este empleado?\nSi lo elimina no volverá a recuperar información acerca de este empleado");
         builder.setPositiveButton("Si, deseo eliminar", (dialog, which) -> {
             empleadoViewModel.delete(empleado);
-            setItems();
+            setItems(binding.spnVerEstados.getSelectedItemPosition());
         });
         builder.setNegativeButton("Cancelar", (dialog, which) -> {
 

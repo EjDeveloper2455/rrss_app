@@ -1,6 +1,7 @@
 package com.example.rrssapp.DataBase;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -8,16 +9,22 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.example.rrssapp.DAO.CargoDao;
+import com.example.rrssapp.DAO.DepartamentoDao;
 import com.example.rrssapp.DAO.EmpleadoDao;
+import com.example.rrssapp.Entities.Cargo;
+import com.example.rrssapp.Entities.Departamento;
 import com.example.rrssapp.Entities.Empleado;
 import com.example.rrssapp.Entities.Empleado;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(version = 1, exportSchema = false, entities = {Empleado.class})
+@Database(version = 1, exportSchema = false, entities = {Empleado.class, Departamento.class, Cargo.class})
 public abstract class RHDataBase extends RoomDatabase {
     public abstract EmpleadoDao empleadoDao();
+    public abstract DepartamentoDao departamentoDao();
+    public abstract CargoDao cargoDao();
 
     private static volatile RHDataBase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -34,22 +41,25 @@ public abstract class RHDataBase extends RoomDatabase {
                         public void onCreate(@NonNull SupportSQLiteDatabase db){
                             super.onCreate(db);
                             databaseWriteExecutor.execute(() -> {
-                                EmpleadoDao dao = INSTANCE.empleadoDao();
-                                dao.deleteAll();
+                                EmpleadoDao empDao = INSTANCE.empleadoDao();
+                                empDao.deleteAll();
+
+                                DepartamentoDao departoDao= INSTANCE.departamentoDao();
+                                departoDao.deleteAll();
+
+                                CargoDao cargodao = INSTANCE.cargoDao();
 
                                 //Creacion de datos por defecto en mi base de datos
-                                dao.insert(new Empleado("0412578555","Elmer Johel Mejia Leiva",1,1,"Masculino",20000,"Activo"));
-                                dao.insert(new Empleado("0412574765","Danny Josue Mejia Leiva",1,1,"Masculino",20000,"Activo"));
-                                dao.insert(new Empleado("041257412365","Genesis Rubi Espinal Leiva",1,1,"Femenino",20000,"Activo"));
-                                dao.insert(new Empleado("0412574000","Kathia Michelle Alvarez Leiva",1,1,"Femenino",20000,"Inactivo"));
-                                dao.insert(new Empleado("04125433765","Eddie Nahum Mejia Leiva",1,1,"Masculino",20000,"Activo"));
-                                dao.insert(new Empleado("147855555","Fernando David Mejia Leiva",1,1,"Masculino",20000,"Inactivo"));
-                                dao.insert(new Empleado("1478555332","Katty Rachel Mejia Leiva",1,1,"Femenino",20000,"Activo"));
-                                dao.insert(new Empleado("547896631","Fernanda Elizabeth Santos Munguia",1,1,"Femenino",20000,"Activo"));
-                                dao.insert(new Empleado("4587965233","Emilio Sandoval",1,1,"Masculino",20000,"Activo"));
-                                dao.insert(new Empleado("5412300558","Ruben Adalberto Castillo Norales",1,1,"Masculino",20000,"Activo"));
-                                dao.insert(new Empleado("5412300547","Luis Enrique Varela Fernandez",1,1,"Masculino",20000,"Inactivo"));
-                                dao.insert(new Empleado("5412300452","Victoria Isabel Santos Munguia",1,1,"Femenino",20000,"Activo"));
+                                departoDao.insert(new Departamento("Administración",
+                                        "Departamento para la administracion empresarial","Activo"));
+                                departoDao.insert(new Departamento("Gerencia","Departamento para los gerentes","Activo"));
+                                departoDao.insert(new Departamento("IT","Departemento de tecnología","Activo"));
+                                departoDao.insert(new Departamento("Caja","Departamento del control de caja","Activo"));
+                                departoDao.insert(new Departamento("Bodega","Departamento del control de las bodegas","Activo"));
+                                departoDao.insert(new Departamento("Limpieza","Departamento de limpieza","Activo"));
+                                departoDao.insert(new Departamento("Contabilidad","Departamento de la contabilidad y finanzas","Activo"));
+                                departoDao.insert(new Departamento("Ventas","Departamento del control de ventas","Activo"));
+
                             });
                         }
                     };

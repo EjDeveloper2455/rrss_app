@@ -1,6 +1,8 @@
 package com.example.rrssapp.ui.empleado;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,18 +13,30 @@ import com.example.rrssapp.Entities.Empleado;
 import com.example.rrssapp.R;
 
 import com.example.rrssapp.databinding.ActivityNewEmpleadoBinding;
+import com.example.rrssapp.ui.slideshow.DepartamentoViewModel;
 
 public class NewEmpleadoActivity extends AppCompatActivity {
     private ActivityNewEmpleadoBinding binding;
+    private DepartamentoViewModel departamentoViewModel;
+    String action;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNewEmpleadoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Intent getIntent = new Intent();
+        departamentoViewModel = new ViewModelProvider(this).get(DepartamentoViewModel.class);
+
+        departamentoViewModel.getDataset().observe(this,departamentos -> {
+        });
+
+        action = null;
+
+        Intent getIntent = getIntent();
         if(getIntent.hasExtra("action")){
-            if (getIntent.getStringExtra("action").equals("update")){
+            Toast.makeText(this,"Llega aqui",Toast.LENGTH_LONG);
+            action = getIntent.getStringExtra("action");
+            if (action.equals("update")){
                 Empleado emp = (Empleado) getIntent.getSerializableExtra("empleado");
                 binding.tilDni.getEditText().setText(emp.getDni());
                 binding.tilDni.getEditText().setEnabled(true);
@@ -53,6 +67,7 @@ public class NewEmpleadoActivity extends AppCompatActivity {
             Empleado empleado = new Empleado(binding.tilDni.getEditText().getText().toString(),binding.tilNombreCompleto.getEditText().getText().toString(),idDepartamento,idCargo,(binding.btnSexo.isChecked())?"Femenino":"Masculino",salario,"Activo");
 
             replyIntent.putExtra("empleado",empleado);
+            replyIntent.putExtra("action",action);
             setResult(RESULT_OK, replyIntent);
             finish();
         });

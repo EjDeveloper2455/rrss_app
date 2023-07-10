@@ -29,6 +29,21 @@
     <string name="lbl_guardar" >Guardar</string>
     <string name="lbl_btn_nuevo_empleado">Boton para agregar nuevo empleado</string>
     <string name="lbl_visualizar_estados">Visualizar:</string>
+    <string name="btn_cerrar_modal">Boton de cerrar modal</string>
+    <string name="boton_de_eliminar">Boton de eliminar</string>
+    <string name="boton_de_habilitar_deshabilitar">Boton de habilitar/deshabilitar</string>
+    <string name="boton_modificar">Boton de modificar</string>
+    <string name="lbl_modal_dni">DNI: %S</string>
+    <string name="lbl_nodal_nombre_completo">Nombre completo: </string>
+    <string name="lbl_modal_departamento">Departamento: %S</string>
+    <string name="lbl_modal_cargo">Cargo: %S</string>
+    <string name="lbl_modal_sexo">Sexo: %S</string>
+    <string name="lbl_modal_salario">Salario: %S</string>
+    <string name="lbl_modal_estado">Estado: %S</string>
+    <string name="lbl_imagen_de_un_cargo" />
+    <string name="lbl_imagen_de_un_lupa" />
+    <string name="lbl_btn_nuevo_cargo" />
+    <string name="tool_nuevo_cargo">Crear nuevo cargo</string>
     <string-array name="departamento_list">
         <item>Administración</item>
         <item>Gerencia</item>

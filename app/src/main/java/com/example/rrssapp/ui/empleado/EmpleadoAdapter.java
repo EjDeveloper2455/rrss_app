@@ -72,12 +72,9 @@ public class EmpleadoAdapter extends RecyclerView.Adapter<EmpleadoAdapter.ViewHo
         }
         public void setOnClickListener(Empleado empleado, OnItemClickListener<Empleado> itemClick){
             binding.imgVer.setOnClickListener(v ->{
-                itemClick.onItemClick(empleado,"delete");
+                itemClick.onItemClick(empleado);
             });
 
-            binding.cardEmpleado.setOnClickListener(v ->{
-                itemClick.onItemClick(empleado,"card");
-            });
 
         }
     }
