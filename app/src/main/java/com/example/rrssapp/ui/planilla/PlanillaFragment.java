@@ -35,6 +35,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class PlanillaFragment extends Fragment implements OnItemClickListener<Planilla> {
 
@@ -90,12 +91,16 @@ public class PlanillaFragment extends Fragment implements OnItemClickListener<Pl
                 dir.mkdir();
                 Toast.makeText(this.getContext(),"Carpeta creada",Toast.LENGTH_LONG).show();
             }
-            File file = new File(dir,planilla.getId()+".pdf");
+
+            String pathPdf = "/"+planilla.getConcepto()+".pdf";
+            File file = new File(dir,pathPdf);
 
             FileOutputStream outputStream = new FileOutputStream(file);
             Document documento = new Document();
             PdfWriter.getInstance(documento,outputStream);
             documento.open();
+
+
 
             Paragraph titulo = new Paragraph("Reporte de pago a planilla NO. "+planilla.getId(), FontFactory.getFont("arial",32, Font.BOLD, BaseColor.BLACK));
             titulo.setSpacingAfter(40);

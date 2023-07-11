@@ -28,10 +28,12 @@ public class Planilla implements Serializable {
     @ColumnInfo(name = "planilla_monto")
     private double monto;
 
+
     public Planilla(@NonNull String fecha, @NonNull String concepto, double monto) {
         this.fecha = fecha;
         this.concepto = concepto;
         this.monto = monto;
+
     }
 
     public int getId() {
@@ -66,5 +68,8 @@ public class Planilla implements Serializable {
 
     public void setMonto(double monto) {
         this.monto = monto;
+    }
+    public String toString(){
+        return this.fecha+"-"+this.id;
     }
 }
