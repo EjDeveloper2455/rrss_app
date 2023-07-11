@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rrssapp.Entities.Empleado;
@@ -48,9 +49,9 @@ public class EmpleadoAdapter extends RecyclerView.Adapter<EmpleadoAdapter.ViewHo
             holder.binding.iconoEmpleado.setImageResource(R.drawable.empleado);
         }
         if (empleado.getEstado().equals("Inactivo")){
-            holder.binding.cardLayout.setBackgroundColor(Color.rgb(90,90,90));
+            holder.binding.cardLayout.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.gray0));
         }else{
-            holder.binding.cardLayout.setBackgroundColor(Color.rgb(2,114,234));
+            holder.binding.cardLayout.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.purple_300));
         }
         holder.setOnClickListener(empleado,itemClick);
     }

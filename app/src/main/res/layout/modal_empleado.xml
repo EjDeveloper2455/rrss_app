@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutPrincipal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/purple_400">>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -52,7 +53,7 @@
         android:layout_width="49dp"
         android:layout_height="50dp"
         android:layout_marginTop="4dp"
-        android:background="@android:drawable/ic_menu_close_clear_cancel"
+        android:background="@drawable/baseline_close_24"
         android:contentDescription="@string/btn_cerrar_modal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.983"

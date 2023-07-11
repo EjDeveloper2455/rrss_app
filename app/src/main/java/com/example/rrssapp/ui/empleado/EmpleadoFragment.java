@@ -20,14 +20,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.rrssapp.Entities.Cargo;
+import com.example.rrssapp.Entities.Departamento;
 import com.example.rrssapp.Entities.Empleado;
 import com.example.rrssapp.OnItemClickListener;
 import com.example.rrssapp.R;
 import com.example.rrssapp.databinding.FragmentEmpleadoBinding;
+import com.example.rrssapp.ui.cargo.CargoViewModel;
+import com.example.rrssapp.ui.depto.DepartamentoViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +45,18 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
     private ActivityResultLauncher<Intent> launcher;
     private EmpleadoViewModel empleadoViewModel;
 
+    private List<Departamento> deptoList;
+    private List<Cargo> cargoList;
+
+    private DepartamentoViewModel departamentoViewModel;
+    private CargoViewModel cargoViewModel;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         empleadoViewModel =
                 new ViewModelProvider(this).get(EmpleadoViewModel.class);
+        departamentoViewModel = new ViewModelProvider(this).get(DepartamentoViewModel.class);
+        cargoViewModel = new ViewModelProvider(this).get(CargoViewModel.class);
 
         binding = FragmentEmpleadoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -51,6 +65,12 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
 
         empleadoViewModel.getDataset().observe(getViewLifecycleOwner(), empleados -> {
             empleadoAdapter.setItems(empleados);
+        });
+        departamentoViewModel.getDataset().observe(getViewLifecycleOwner(), departamentos -> {
+            deptoList = departamentos;
+        });
+        cargoViewModel.getDataset().observe(getViewLifecycleOwner(), cargos -> {
+            cargoList = cargos;
         });
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(), R.array.ver_estados_list, android.R.layout.simple_spinner_item);
@@ -76,9 +96,14 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        Empleado empleado = (Empleado) data.getSerializableExtra("empleado");
-                        if(data.getStringExtra("action").equals("new"))empleadoViewModel.insert(empleado);
-                        else empleadoViewModel.update(empleado);
+
+
+                        Empleado empleado = (Empleado) data.getSerializableExtra("empleado");Empleado n = empleado;
+                        if(data.hasExtra("action")) {
+                            if(data.getStringExtra("action").equals("new"))empleadoViewModel.insert(empleado);
+                            else empleadoViewModel.update(empleado);
+                        }
+
                         setItems(binding.spnVerEstados.getSelectedItemPosition());
                     } else {
                         Toast.makeText(this.getContext(),"Operación cancelada",Toast.LENGTH_LONG).show();
@@ -145,11 +170,12 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
         tvCampos[0].setText(getString(R.string.lbl_modal_dni,empleado.getDni()));
         tvCampos[1].setText(R.string.lbl_nodal_nombre_completo);
         tvCampos[2].setText(empleado.getNombre());
-        tvCampos[3].setText(getString(R.string.lbl_modal_departamento,empleado.getDepartamento()+""));
-        tvCampos[4].setText(getString(R.string.lbl_modal_cargo,empleado.getCargo()+""));
+        tvCampos[3].setText(getString(R.string.lbl_modal_departamento,buscarDepto(empleado.getDepartamento(),deptoList).getNombre()));
+        tvCampos[4].setText(getString(R.string.lbl_modal_cargo,buscarCargo(empleado.getCargo(),cargoList).getNombreCargo()));
         tvCampos[5].setText(getString(R.string.lbl_modal_sexo,empleado.getSexo()));
         tvCampos[6].setText(getString(R.string.lbl_modal_salario,empleado.getSalario()+""));
         tvCampos[7].setText(getString(R.string.lbl_modal_estado,empleado.getEstado()));
+        ConstraintLayout layout = view.findViewById(R.id.layoutPrincipal);
 
         Button btnCerrar = view.findViewById(R.id.btnCerrar);
         btnCerrar.setOnClickListener(v ->{
@@ -176,8 +202,11 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
 
             if(empleado.getEstado().equalsIgnoreCase("Inactivo")){
                 empleado.setEstado("Activo");
+                layout.setBackgroundColor(ContextCompat.getColor(this.getContext(), R.color.purple_400));
+
             }else{
                 empleado.setEstado("Inactivo");
+                layout.setBackgroundColor(ContextCompat.getColor(this.getContext(), R.color.gray0));
             }
             empleadoViewModel.update(empleado);
             setItems(binding.spnVerEstados.getSelectedItemPosition());
@@ -216,22 +245,18 @@ public class EmpleadoFragment extends Fragment implements OnItemClickListener<Em
         dialog.show();
     }
 
-    public void modalCard(Empleado empleado){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-        builder.setTitle(empleado.getNombre()+"\n"+empleado.getDni());
-        builder.setMessage("Departamento:"+empleado.getDepartamento()+"\nCargo:"+
-                empleado.getCargo()+"\nSexo: "+empleado.getSexo()+"\nSalario: "+empleado.getSalario()+"\nEstado: "+empleado.getEstado());
-        builder.setPositiveButton("Modificar", (dialog, which) -> {
-            Intent intent = new Intent(requireContext(), NewEmpleadoActivity.class);
-            intent.putExtra("action","update");
-            intent.putExtra("empleado",empleado);
-            launcher.launch(intent);
-        });
-        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+    public Departamento buscarDepto(int id, List<Departamento> list){
+        for (Departamento depto: list) {
+            if (depto.getId()==id)return depto;
+        }
+        return null;
+    }
 
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+    public Cargo buscarCargo(int id, List<Cargo> list){
+        for (Cargo cargo: list) {
+            if (cargo.getIdCargo()==id)return cargo;
+        }
+        return null;
     }
 
 }

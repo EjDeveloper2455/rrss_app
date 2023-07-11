@@ -1,4 +1,4 @@
-package com.example.rrssapp.ui.cargo;
+package com.example.rrssapp.ui.depto;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,47 +17,49 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.rrssapp.Entities.Cargo;
+import com.example.rrssapp.Entities.Departamento;
 import com.example.rrssapp.OnItemClickListener;
-import com.example.rrssapp.databinding.FragmentRvCargosBinding;
+import com.example.rrssapp.databinding.FragmentDepartamentoBinding;
+import com.example.rrssapp.ui.cargo.NewCargoActivity;
+import com.example.rrssapp.ui.empleado.EmpleadoAdapter;
 
 import java.util.ArrayList;
 
-public class CargoFragment extends Fragment implements OnItemClickListener<Cargo> {
+public class DepartamentoFragment extends Fragment implements OnItemClickListener<Departamento> {
 
-    private FragmentRvCargosBinding binding;
-    private CargoAdapter cargoAdapter;
+    private FragmentDepartamentoBinding binding;
+    DepartamentoViewModel departamentoViewModel;
     private ActivityResultLauncher<Intent> launcher;
-    private CargoViewModel cargoViewModel;
+    DepartamentoAdapter departamentoAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        cargoViewModel =
-                new ViewModelProvider(this).get(CargoViewModel.class);
 
-        binding = FragmentRvCargosBinding.inflate(inflater,container, false);
+        binding = FragmentDepartamentoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        cargoAdapter = new CargoAdapter(new ArrayList<>(),this);
 
+        departamentoViewModel = new ViewModelProvider(this).get(DepartamentoViewModel.class);
 
-        cargoViewModel.getDataset().observe(getViewLifecycleOwner(), cargos -> {
-            cargoAdapter.setItems(cargos);
+        departamentoAdapter = new DepartamentoAdapter(new ArrayList<>(),this);
+        setupRecyrcleView();
+
+        departamentoViewModel.getDataset().observe(getViewLifecycleOwner(), departamentos -> {
+            departamentoAdapter.setItems(departamentos);
         });
 
-        setupRecyrcleView();
         launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        Cargo cargo = (Cargo) data.getSerializableExtra("cargo");
-                        if (data.getStringExtra("action").equals("new"))cargoViewModel.insert(cargo);
+                        Departamento departamento = (Departamento) data.getSerializableExtra("departamento");
+                        if (data.getStringExtra("action").equals("new"))departamentoViewModel.insert(departamento);
                         else {
-                            Toast.makeText(this.getContext(),cargo.getNombreCargo()+" "+cargo.getIdCargo(),Toast.LENGTH_LONG).show();
-                            cargoViewModel.update(cargo);
+                            departamentoViewModel.update(departamento);
 
                         }
-                        cargoViewModel.getDataset().observe(getViewLifecycleOwner(), cargos -> {
-                            cargoAdapter.setItems(cargos);
+                        departamentoViewModel.getDataset().observe(getViewLifecycleOwner(), cargos -> {
+                            departamentoAdapter.setItems(cargos);
                         });
                     } else {
                         Toast.makeText(this.getContext(),"Operación cancelada",Toast.LENGTH_LONG).show();
@@ -64,21 +67,18 @@ public class CargoFragment extends Fragment implements OnItemClickListener<Cargo
                 }
         );
 
-        binding.fabCargo.setOnClickListener(v -> {
-            Intent intent = new Intent (requireContext(), NewCargoActivity.class);
+        binding.fabDepto.setOnClickListener(v -> {
+            Intent intent = new Intent (requireContext(), NewDepartamentoActivity.class);
             intent.putExtra("action","new");
             launcher.launch(intent);
         });
 
-
-
         return root;
     }
-
     private void setupRecyrcleView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
-        binding.rvCargos.setLayoutManager(linearLayoutManager);
-        binding.rvCargos.setAdapter(cargoAdapter);
+        binding.rvDepto.setLayoutManager(linearLayoutManager);
+        binding.rvDepto.setAdapter(departamentoAdapter);
     }
 
     @Override
@@ -88,10 +88,10 @@ public class CargoFragment extends Fragment implements OnItemClickListener<Cargo
     }
 
     @Override
-    public void onItemClick(Cargo data) {
-        Intent intent = new Intent (requireContext(), NewCargoActivity.class);
+    public void onItemClick(Departamento data) {
+        Intent intent = new Intent (requireContext(), NewDepartamentoActivity.class);
         intent.putExtra("action","update");
-        intent.putExtra("cargo", data);
+        intent.putExtra("departamento",data);
         launcher.launch(intent);
     }
 }

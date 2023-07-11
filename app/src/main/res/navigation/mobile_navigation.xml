@@ -18,8 +18,18 @@
         tools:layout="@layout/fragment_empleado" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.rrssapp.ui.slideshow.SlideshowFragment"
+        android:id="@+id/nav_planilla"
+        android:name="com.example.rrssapp.ui.planilla.PlanillaFragment"
         android:label="@string/planilla"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_planilla" />
+    <fragment
+        android:id="@+id/nav_departamento"
+        android:name="com.example.rrssapp.ui.depto.DepartamentoFragment"
+        android:label="@string/tv_departamento"
+        tools:layout="@layout/fragment_departamento" />
+    <fragment
+        android:id="@+id/nav_cargo"
+        android:name="com.example.rrssapp.ui.cargo.CargoFragment"
+        android:label="@string/tv_cargo"
+        tools:layout="@layout/fragment_rv_cargos" />
 </navigation>

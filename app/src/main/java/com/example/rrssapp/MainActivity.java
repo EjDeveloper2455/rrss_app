@@ -1,6 +1,10 @@
 package com.example.rrssapp;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -11,12 +15,16 @@ import com.example.rrssapp.ui.empleado.NewEmpleadoActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.Writer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_empleado, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_empleado, R.id.nav_planilla,R.id.nav_departamento,R.id.nav_cargo)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -46,8 +54,38 @@ public class MainActivity extends AppCompatActivity {
 
         //Toast.makeText(this,navController.hashCode(),Toast.LENGTH_SHORT).show();
         binding.appBarMain.fab.setVisibility(View.INVISIBLE);
+
+        if(checkPermission()){
+            //Toast.makeText(this,"Permiso aceptado",Toast.LENGTH_LONG).show();
+        }else{
+            requestPermissions();
+        }
     }
 
+    private boolean checkPermission(){
+        int permission1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int permission2 = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
+
+        return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void requestPermissions(){
+        ActivityCompat.requestPermissions(this,new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE},200);
+    }
+
+    public void onRequestPermissionResult(int requestCode,String [] permissions, int[] grandResults){
+        if(requestCode == 200){
+            if (grandResults.length>0){
+                boolean writeStorage= grandResults[0] == PackageManager.PERMISSION_GRANTED;
+                boolean readStorage= grandResults[1] == PackageManager.PERMISSION_GRANTED;
+                if (writeStorage && readStorage){
+                    Toast.makeText(this,"Permisos concedidos",Toast.LENGTH_LONG).show();
+                }else {
+                    Toast.makeText(this,"Permisos denegados",Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

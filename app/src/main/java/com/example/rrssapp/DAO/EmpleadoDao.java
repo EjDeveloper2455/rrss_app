@@ -30,4 +30,7 @@ public interface EmpleadoDao {
     LiveData<List<Empleado>> getEmpleados();
     @Query("SELECT * FROM empleado_table where empleado_estado = :estado ORDER BY empleado_nombre ASC")
     LiveData<List<Empleado>> getEmpleadosEstado(String estado);
+
+    @Query("SELECT SUM(empleado_salario) FROM empleado_table where empleado_estado = 'Activo'")
+    LiveData<Double> getMontoTotal();
 }

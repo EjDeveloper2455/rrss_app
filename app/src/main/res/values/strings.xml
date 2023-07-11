@@ -2,8 +2,8 @@
     <string name="app_name">RRSS APP</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Recursos Humanos App</string>
+    <string name="nav_header_subtitle">rrhh.app@gmail.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -44,6 +44,10 @@
     <string name="lbl_imagen_de_un_lupa" />
     <string name="lbl_btn_nuevo_cargo" />
     <string name="tool_nuevo_cargo">Crear nuevo cargo</string>
+    <string name="app_title">Recursos Humanos App</string>
+    <string name="crear_nuevo_departamento">Crear nuevo departamento</string>
+    <string name="recursos_humanos_app">Recursos Humanos App</string>
+    <string name="lbl_bievenidos">BIEVENIDOS A</string>
     <string-array name="departamento_list">
         <item>Administración</item>
         <item>Gerencia</item>

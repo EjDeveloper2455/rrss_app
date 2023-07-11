@@ -12,8 +12,6 @@ import com.example.rrssapp.Repositories.EmpleadoRepository;
 import java.util.List;
 
 public class EmpleadoViewModel extends AndroidViewModel {
-
-
     private final LiveData<List<Empleado>> dataset;
     private EmpleadoRepository empleadoRepository;
 
@@ -35,6 +33,9 @@ public class EmpleadoViewModel extends AndroidViewModel {
         return datasetEstado;
     }
 
+    public LiveData<Double> getMontoTotal(){
+        return empleadoRepository.getMontoTotal();
+    }
     public void insert(Empleado empleado){
         empleadoRepository.insert(empleado);
     }

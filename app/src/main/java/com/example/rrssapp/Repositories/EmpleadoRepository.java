@@ -28,6 +28,10 @@ public class EmpleadoRepository {
         return datasetEstado;
     }
 
+    public LiveData<Double> getMontoTotal(){
+        return dao.getMontoTotal();
+    }
+
     public void insert(Empleado empleado){
         RHDataBase.databaseWriteExecutor.execute(() -> {
             dao.insert(empleado);

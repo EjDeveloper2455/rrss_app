@@ -16,54 +16,64 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="75dp"
+            android:background="@color/purple_300">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/iconoCargo"
                 android:layout_width="wrap_content"
-                android:layout_height="128dp"
-                android:layout_marginTop="4dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="16dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/lbl_imagen_de_un_cargo"
                 android:scaleType="fitStart"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/img_cargo" />
-
-             <TextView
-                android:id="@+id/tvDepartamento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="24dp"
-                android:text="Tecnologia"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/tvCargo" />
+                app:srcCompat="@drawable/cargo" />
 
             <TextView
                 android:id="@+id/tvCargo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="24dp"
-                android:text="Jefe Sistemas"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                app:layout_constraintBottom_toTopOf="@+id/tvDepartamento"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_width="0dp"
+                android:layout_height="27dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imgSearch"
+                app:layout_constraintStart_toEndOf="@+id/tvCargoID"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Cargo" />
 
             <ImageView
                 android:id="@+id/imgSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
                 android:contentDescription="@string/lbl_imagen_de_un_lupa"
-                app:layout_constraintBottom_toBottomOf="@+id/tvDepartamento"
-                app:layout_constraintStart_toEndOf="@+id/tvCargo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/baseline_edit_24" />
+
+            <TextView
+                android:id="@+id/tvCargoID"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_marginStart="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@color/gray1"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tvCargo"
+                app:layout_constraintStart_toEndOf="@+id/iconoCargo"
                 app:layout_constraintTop_toTopOf="@+id/tvCargo"
-                app:srcCompat="@drawable/baseline_search_24" />
+                tools:text="1" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

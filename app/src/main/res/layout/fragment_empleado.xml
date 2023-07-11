@@ -35,6 +35,7 @@
         android:clickable="true"
         android:contentDescription="@string/lbl_btn_nuevo_empleado"
         android:src="@drawable/baseline_person_add_alt_1_24"
+        app:backgroundTint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.881"

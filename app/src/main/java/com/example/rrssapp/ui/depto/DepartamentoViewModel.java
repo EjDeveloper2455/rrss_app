@@ -1,4 +1,4 @@
-package com.example.rrssapp.ui.slideshow;
+package com.example.rrssapp.ui.depto;
 
 import android.app.Application;
 
