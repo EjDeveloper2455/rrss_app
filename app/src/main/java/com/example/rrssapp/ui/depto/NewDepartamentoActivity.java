@@ -36,7 +36,7 @@ public class NewDepartamentoActivity extends AppCompatActivity {
 
 
     binding.btnGuardarDepto.setOnClickListener(v -> {
-
+        if(!validar())return;
       Intent replyIntent = new Intent();
       Departamento departamento = new Departamento(binding.tilNombreDepartamento.getEditText().getText().toString(),binding.tilDescripcionDepto.getEditText().getText().toString(),"Activo");
         departamento.setNombre(departamento.getNombre().toUpperCase());
@@ -49,7 +49,17 @@ public class NewDepartamentoActivity extends AppCompatActivity {
       finish();
     });
   }
-
+    private boolean validar(){
+      if(binding.tilNombreDepartamento.getEditText().getText().toString().isEmpty()){
+          binding.tilNombreDepartamento.getEditText().setError(getString(R.string.campo_vacio));
+          return false;
+      }
+        if(binding.tilDescripcionDepto.getEditText().getText().toString().isEmpty()){
+            binding.tilDescripcionDepto.getEditText().setError(getString(R.string.campo_vacio));
+            return false;
+        }
+      return true;
+    }
 
 
 }

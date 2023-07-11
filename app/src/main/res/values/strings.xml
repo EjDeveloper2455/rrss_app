@@ -48,6 +48,7 @@
     <string name="crear_nuevo_departamento">Crear nuevo departamento</string>
     <string name="recursos_humanos_app">Recursos Humanos App</string>
     <string name="lbl_bievenidos">BIEVENIDOS A</string>
+    <string name="campo_vacio">Este campo no puede quedar vacío</string>
     <string-array name="departamento_list">
         <item>Administración</item>
         <item>Gerencia</item>

@@ -38,6 +38,7 @@ public class PlanillaAdapter extends RecyclerView.Adapter<PlanillaAdapter.ViewHo
 
         holder.binding.tvPlanillaFecha.setText(planilla.getFecha().toString());
         holder.binding.tvPlanillaMonto.setText("L. "+planilla.getMonto());
+        holder.binding.tvIDPlanilla.setText(planilla.getId()+". ");
 
         holder.setOnClickListener(planilla,itemClick);
     }

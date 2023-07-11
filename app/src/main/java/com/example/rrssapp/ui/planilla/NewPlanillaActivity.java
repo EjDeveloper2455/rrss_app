@@ -60,9 +60,16 @@ public class NewPlanillaActivity extends AppCompatActivity {
     binding.tilMontoPlanilla.getEditText().setOnKeyListener(null);
 
     binding.btnGuardarDepto.setOnClickListener(v -> {
+      if(binding.tilConceptoPlanilla.getEditText().getText().toString().isEmpty()){
+        binding.tilConceptoPlanilla.getEditText().setError(getString(R.string.campo_vacio));
+        return;
+      }
       Intent replyIntent = new Intent();
       Planilla planilla = new Planilla(binding.tilFechaPlanilla.getEditText().getText().toString(),binding.tilConceptoPlanilla.getEditText().getText().toString(),montoPagar);
-
+      if(planilla.getMonto()<=0){
+        binding.tilMontoPlanilla.getEditText().setError("Se requiere un monto total para realizar un pago de planilla");
+        return;
+      }
       replyIntent.putExtra("planilla", planilla);
       setResult(RESULT_OK, replyIntent);
       finish();
